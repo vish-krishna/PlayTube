@@ -5,7 +5,7 @@ const handleError = (err, req, res, next) => {
     const message = err.message || 'Something went wrong!';
     return res
         .status(statusCode)
-        .json(new ApiResponse(statusCode, message, null));
+        .json(new ApiResponse(statusCode, null, message));
 };
 
 export { handleError };
