@@ -1,7 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import { handleError } from './middlewares/handleError.middleware.js';
+import { appErrorHandler } from './middlewares/appErrorHandler.middleware.js';
 
 const app = express();
 
@@ -21,6 +21,7 @@ app.use(cookieParser());
 import userRouter from './routes/user.routes.js';
 
 app.use('/api/v1/users', userRouter);
-app.use(handleError);
+
+app.use(appErrorHandler);
 
 export { app };
