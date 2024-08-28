@@ -53,21 +53,19 @@ const verifyJWT = asyncHandler(async (req, _, next) => {
             accessToken,
             process.env.ACCESS_TOKEN_SECRET
         );
+        const { _id, email } = decodedToken;
 
-        console.log('DECODED TOKEN IN VERIFY JWT - ', decodedToken);
-
-        const { _id, email, username, fullName } = decodedToken;
-
-        if (!decodedToken || !_id || !email || !username || !fullName) {
+        if (!decodedToken || !_id || !email) {
             throw new ApiError(401, 'Unauthorised Request.');
         }
 
-        req.user = {
-            _id,
-            email,
-            username,
-            fullName,
-        };
+        const userInfo = await User.findById(req.user?._id).select('-password');
+
+        if (!userInfo || !userInfo.refreshToken) {
+            throw new ApiError(401, 'Unauthorised Request.');
+        }
+
+        req.user = userInfo;
         next();
     } catch (err) {
         // Handle JWT-specific errors
