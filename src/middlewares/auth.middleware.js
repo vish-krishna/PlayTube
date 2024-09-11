@@ -59,7 +59,7 @@ const verifyJWT = asyncHandler(async (req, _, next) => {
             throw new ApiError(401, 'Unauthorised Request.');
         }
 
-        const userInfo = await User.findById(req.user?._id).select('-password');
+        const userInfo = await User.findById(_id).select('-password');
 
         if (!userInfo || !userInfo.refreshToken) {
             throw new ApiError(401, 'Unauthorised Request.');
