@@ -28,4 +28,66 @@ const uploadFileOnCloud = async (localFilePath) => {
     }
 };
 
-export { uploadFileOnCloud, configureCloudinary };
+const deleteImageFromCloudinary = async (resourceUrl) => {
+    try {
+        const parts = resourceUrl.split('/');
+        const fileNameWithExtension = parts[parts.length - 1];
+        const fileName = fileNameWithExtension.split('.')[0];
+
+        const deleteResponse = await cloudinary.api.delete_resources([
+            fileName,
+        ]);
+        console.log('Deleted Response -> ', deleteResponse);
+
+        if (
+            deleteResponse &&
+            deleteResponse.deleted &&
+            deleteResponse.deleted[fileName] &&
+            deleteResponse.deleted[fileName] === 'deleted'
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.log('Image delete failed ', error);
+        return false;
+    }
+};
+
+const deleteVideoFromCloudinary = async (resourceUrl) => {
+    try {
+        const parts = resourceUrl.split('/');
+        const fileNameWithExtension = parts[parts.length - 1];
+        const fileName = fileNameWithExtension.split('.')[0];
+
+        const deleteResponse = await cloudinary.api.delete_resources(
+            [fileName],
+            {
+                resource_type: 'video',
+            }
+        );
+        console.log('Deleted Response -> ', deleteResponse);
+
+        if (
+            deleteResponse &&
+            deleteResponse.deleted &&
+            deleteResponse.deleted[fileName] &&
+            deleteResponse.deleted[fileName] === 'deleted'
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.log('Video Delete failed ', error);
+        return false;
+    }
+};
+
+export {
+    uploadFileOnCloud,
+    configureCloudinary,
+    deleteImageFromCloudinary,
+    deleteVideoFromCloudinary,
+};
